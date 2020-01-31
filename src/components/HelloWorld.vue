@@ -7,6 +7,23 @@
         @dragend="handleDragend"
         @dragmove="handleDragmove"
       >
+        <v-layer>
+          <v-line 
+          v-for="line in 10"
+          :key="line"
+          :config="{    
+            x: 0,
+            y: 0,
+            points: [(width/10)*line,0,(width/10)*line,height],
+            tension: 0.5,
+            closed: false,
+            stroke: '#888',
+            draggable: false,
+            strokeWidth: 1
+            }"
+          >
+          </v-line>
+            </v-layer>
        <v-layer>
           <v-line 
           v-for="line in 10"
@@ -14,7 +31,7 @@
           :config="{    
             x: 0,
             y: 0,
-            points: [0,60*line,width,60*line],
+            points: [0,(height/10)*line,width,(height/10)*line],
             tension: 0.5,
             closed: false,
             stroke: '#888',
@@ -28,7 +45,7 @@
           <v-line v-if="points.length>0"
           :config="{    
             x: 0,
-            y: 200,
+            y: 0,
             points: points,
             tension: 0.5,
             closed: false,
@@ -52,6 +69,12 @@
             draggable: true,
             id:item.id,
             dragBoundFunc: function(pos) {
+              if(pos.y<0 || pos.y>height){
+                return{
+                  x: this.absolutePosition().x,
+                  y: this.absolutePosition().y,
+                }
+              }
               return {
                 x: this.absolutePosition().x,
                 y: pos.y
@@ -117,7 +140,7 @@ export default {
         for(let i in this.list){
         console.log(this.list[i]);
           this.points.push(this.list[i].x);
-          this.points.push(this.height-this.list[i].y-200);
+          this.points.push(this.height-this.list[i].y);
         }
       },
       handleDragstart(){
