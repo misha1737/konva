@@ -7,6 +7,7 @@
         @dragend="handleDragend"
         @dragmove="handleDragmove"
       >
+      
         <v-layer>
           <v-line 
           v-for="line in 10"
@@ -41,53 +42,14 @@
           >
           </v-line>
        </v-layer>
-      <v-layer>
-          <v-line v-if="points.length>0"
-          :config="{    
-            x: 0,
-            y: 0,
-            points: points,
-            tension: 0.5,
-            closed: false,
-            stroke: 'black',
-            draggable: false,
-            fillLinearGradientStartPoint: { x: -50, y: -50 },
-            fillLinearGradientEndPoint: { x: 50, y: 50 },
-            fillLinearGradientColorStops: [0, 'red', 1, 'yellow']
-            }"
-          >
-          </v-line>
-      </v-layer>
-        <v-layer>
+         <GraphLine
+          :points="points"
+          :list="list"
+          :width="width"
+          :height="height"
           
-          <v-circle 
-          v-for="item in list"
-          :key="item.id"
-          :config='{
-            x:item.x,
-            y:height-item.y,
-            draggable: true,
-            id:item.id,
-            dragBoundFunc: function(pos) {
-              if(pos.y<0 || pos.y>height){
-                return{
-                  x: this.absolutePosition().x,
-                  y: this.absolutePosition().y,
-                }
-              }
-              return {
-                x: this.absolutePosition().x,
-                y: pos.y
-              };
-            },
-            radius: 5,
-            fill: "red",
-            stroke: "black",
-            strokeWidth: 1
-          }'
-          ></v-circle>
           
-        </v-layer>
+          ></GraphLine>
       </v-stage>
     </div>
     <button @click="renderLine">DrawGrafic</button>
@@ -101,6 +63,7 @@
 </template>
 
 <script>
+import GraphLine from './GraphLine.vue'
 export default {
   name: 'HelloWorld',
  
@@ -109,7 +72,7 @@ export default {
     return {
       width: 600,
       height: 400,
-      list:[{x:50,y:40,id:1},{x:100,y:200},{x:150,y:160,id:3},{x:200,y:240,id:4},{x:250,y:80,id:5},{x:300,y:120,id:6},{x:350,y:140,id:7},{x:400,y:120,id:8}],
+      list:[],
       points:[],
        configKonva: {
          width: 600,
@@ -129,8 +92,12 @@ export default {
       }
     };
   },
+   components: {
+    GraphLine
+  },
   props: {
-    msg: String
+    msg: String,
+    graphics: []
   },
   methods:{
       renderLine(){
@@ -139,7 +106,7 @@ export default {
         }
         for(let i in this.list){
         console.log(this.list[i]);
-          this.points.push(this.list[i].x);
+          this.points.push(i*40);
           this.points.push(this.height-this.list[i].y);
         }
       },
@@ -155,6 +122,7 @@ export default {
       }
   },
   mounted(){
+    this.list=this.graphics;
     this.renderLine()
   }
 

@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <graph :graphics='graphics' msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import graph from './components/Graph.vue'
 
 export default {
   name: 'app',
+  data() {
+    return {
+      graphics:[{x:50,y:40},{x:100,y:200},{x:150,y:160},{x:200,y:240},{x:250,y:80},{x:300,y:120},{x:350,y:140},{x:400,y:120}]
+    }
+  },
+  
   components: {
-    HelloWorld
+    graph
   }
 }
 </script>
