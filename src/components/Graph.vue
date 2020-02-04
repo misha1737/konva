@@ -15,7 +15,7 @@
           :config="{    
             x: 0,
             y: 0,
-            points: [(width/10)*line,0,(width/10)*line,height],
+            points: [(width/horisontalPoints)*line,0,(width/horisontalPoints)*line,height],
             tension: 0.5,
             closed: false,
             stroke: '#888',
@@ -47,17 +47,20 @@
           :list="list"
           :width="width"
           :height="height"
-          
+          :disVerLine="disVerLine"
           
           ></GraphLine>
       </v-stage>
     </div>
     <button @click="renderLine">DrawGrafic</button>
     <div class="statusInfo">
-    <p>configCircle - <span>{{configCircle}}</span></p>
-    <p>configCircle x-y -<span>{{configCircle.x}} - {{configCircle.y}}</span></p>
-    <p>points - <span>{{points}}</span></p>
-    <p>list - <span>{{list}}</span></p>
+    <p>configCircle:<span>{{configCircle}}</span></p>
+    <p>configCircle x-y:<span>{{configCircle.x}} - {{configCircle.y}}</span></p>
+    <p>points:<span>{{points}}</span></p>
+    <p>list:<span>{{list}}</span></p>
+    <p>horisontalPoints:<span>{{horisontalPoints}}</span></p>
+    <p>disVerLine:<span>{{disVerLine}}</span></p>
+    
     </div>
   </div>
 </template>
@@ -65,7 +68,7 @@
 <script>
 import GraphLine from './GraphLine.vue'
 export default {
-  name: 'HelloWorld',
+  name: 'Graph',
  
   data() {
     
@@ -74,6 +77,8 @@ export default {
       height: 400,
       list:[],
       points:[],
+      horisontalPoints:Number,
+      distanceVerticalLine:Number,
        configKonva: {
          width: 600,
          height: 400
@@ -97,7 +102,7 @@ export default {
   },
   props: {
     msg: String,
-    graphics: []
+    graphics: {}
   },
   methods:{
       renderLine(){
@@ -105,9 +110,8 @@ export default {
         this.points=[];
         }
         for(let i in this.list){
-        console.log(this.list[i]);
-          this.points.push(i*40);
-          this.points.push(this.height-this.list[i].y);
+          this.points.push(i*this.disVerLine);
+          this.points.push(this.height-this.list[i]);
         }
       },
       handleDragstart(){
@@ -116,13 +120,15 @@ export default {
 
       },
       handleDragmove(e){
-          console.log(e.target.index)
-          this.list[e.target.index].y=this.height-e.target.attrs.y;
+         
+          this.list[e.target.index]=this.height-e.target.attrs.y;
           this.renderLine()
       }
   },
   mounted(){
     this.list=this.graphics;
+    this.horisontalPoints=this.list.length-1;
+    this.disVerLine=this.configKonva.width/this.horisontalPoints;
     this.renderLine()
   }
 
@@ -134,6 +140,8 @@ export default {
 <style lang="scss">
 .graficPage{
   .grafic{
+   
+    
     //width:300px;
    // height:300px;
     background:#eee;

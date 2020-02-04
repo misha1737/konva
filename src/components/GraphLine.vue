@@ -1,5 +1,6 @@
 <template>
   <div class="GraphLine">
+    
       <v-layer>
           <v-line v-if="points.length>0"
           :config="{    
@@ -10,12 +11,9 @@
             closed: false,
             stroke: 'black',
             draggable: false,
-            fillLinearGradientStartPoint: { x: -50, y: -50 },
-            fillLinearGradientEndPoint: { x: 50, y: 50 },
-            fillLinearGradientColorStops: [0, 'red', 1, 'yellow']
             }"
           >
-     </v-line>
+          </v-line>
       </v-layer>
         <v-layer>
           
@@ -23,8 +21,8 @@
           v-for="(item, state) in list"
           :key="item.id"
           :config='{
-            x:state*40,
-            y:height-item.y,
+            x:state*disVerLine,
+            y:height-item,
             draggable: true,
             id:item.id,
             dragBoundFunc: function(pos) {
@@ -64,16 +62,17 @@ export default {
     };
   },
   props: {
-    points:[],
-    list:[],
+    points:{},
+    list:{},
     height:Number,
-    width:Number
+    width:Number,
+    disVerLine:Number
   },
   methods:{
       
   },
   mounted(){
-
+    
   }
 
 }
