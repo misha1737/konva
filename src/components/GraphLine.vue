@@ -1,6 +1,5 @@
 <template>
-  <div class="GraphLine">
-    
+  <div class="GraphLine" >
       <v-layer
        :config="{
             x:40,
@@ -15,7 +14,7 @@
             closed: true,
             stroke: 'black',
             draggable: false,
-            fill: '#33cc3355',
+            fill: '#33cc3388',
             strokeWidth: 1
             //opacity: 0.3
             }"
@@ -26,7 +25,11 @@
          :config="{
             x:40,
             y:10
-          }">
+          }"
+        @dragstart="handleDragstart"
+        @dragend="handleDragend"
+        @dragmove="handleDragmove"
+          >
           
           <v-circle 
           v-for="(item, state) in list"
@@ -65,16 +68,17 @@
 
 <script>
 export default {
+  
   name: 'HelloWorld',
  
   data() {
     
     return {
-  
+     points:[]
     };
   },
   props: {
-    points:{},
+
     list:{},
     height:Number,
     width:Number,
@@ -82,10 +86,45 @@ export default {
     onePixel:Number
   },
   methods:{
-      
+     renderLine(){
+        if(this.points.length>1){
+        this.points=[];
+        }
+        for(let i in this.list){
+          this.points.push(i*this.disVerLine);
+          this.points.push(this.height-this.list[i]*this.onePixel);
+        }
+        this.points.push(this.width);
+        this.points.push(this.height);
+        this.points.push(0);
+        this.points.push(this.height);
+        //this.$emit('update:points', this.points)
+
+      },
+        handleDragstart(){
+         
+      },
+      handleDragend(e){
+           this.list[e.target.index]=(this.height-e.target.attrs.y)/this.onePixel;
+          this.renderLine();
+         
+      },
+      handleDragmove(){
+         
+          
+      }
   },
   mounted(){
-   
+
+ 
+
+
+  },
+  created(){
+    setTimeout(()=>{
+      this.renderLine();
+    },0)
+     
   }
 
 }

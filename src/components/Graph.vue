@@ -3,9 +3,7 @@
     <div class="grafic">
       <v-stage 
       :config="configKonva"
-       @dragstart="handleDragstart"
-        @dragend="handleDragend"
-        @dragmove="handleDragmove"
+    
       >
       
         <v-layer
@@ -51,7 +49,8 @@
             closed: false,
             stroke: '#888',
             draggable: false,
-            strokeWidth: 1
+            strokeWidth: 1,
+            ZIndex:500
             }"
           >
           </v-line>
@@ -79,9 +78,10 @@
           </v-line>
          
        </v-layer>
-         <GraphLine
-          :points="points"
-          :list="list"
+         <GraphLine 
+          v-for="graph in list"
+          :key="graph.id"
+          :list="graph"
           :width="width"
           :height="height"
           :disVerLine="disVerLine"
@@ -90,9 +90,6 @@
       </v-stage>
     </div>
     <div class="statusInfo">
-    <p>configCircle:<span>{{configCircle}}</span></p>
-    <p>configCircle x-y:<span>{{configCircle.x}} - {{configCircle.y}}</span></p>
-    <p>points:<span>{{points}}</span></p>
     <p>list:<span>{{list}}</span></p>
     <p>horisontalPoints:<span>{{horisontalPoints}}</span></p>
     <p>disVerLine:<span>{{disVerLine}}</span></p>
@@ -109,14 +106,13 @@ export default {
   name: 'Graph',
  
   data() {
-    
+
     return {
       width: 800,
       height: 400,
       maxRange:800,
       onePixel:1,
       list:[],
-      points:[],
       horisontalPoints:Number,
       distanceVerticalLine:Number,
       disVerLine:0,
@@ -146,38 +142,15 @@ export default {
     graphics: {}
   },
   methods:{
-      renderLine(){
-        if(this.points.length>1){
-        this.points=[];
-        }
-        for(let i in this.list){
-          this.points.push(i*this.disVerLine);
-          this.points.push(this.height-this.list[i]*this.onePixel);
-        }
-        this.points.push(this.width);
-        this.points.push(this.height);
-        this.points.push(0);
-        this.points.push(this.height);
+     
 
-      },
-      handleDragstart(){
-      },
-      handleDragend(e){
-        this.list[e.target.index]=(this.height-e.target.attrs.y)/this.onePixel;
-          this.renderLine()
-
-      },
-      handleDragmove(){
-         
-          
-      }
   },
   mounted(){
-    this.list=this.graphics[0];
-    this.horisontalPoints=this.list.length;
+    this.list=this.graphics;
+    this.horisontalPoints=this.list[0].length;
     this.disVerLine=this.width/(this.horisontalPoints-1);
     this.onePixel=this.height/this.maxRange;
-    this.renderLine();
+    
   }
 
 }
