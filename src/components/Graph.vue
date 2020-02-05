@@ -3,9 +3,7 @@
     <div class="grafic">
       <v-stage 
       :config="configKonva"
-    
       >
-      
         <v-layer
           :config="{
             x:40,
@@ -50,7 +48,7 @@
             stroke: '#888',
             draggable: false,
             strokeWidth: 1,
-            ZIndex:500
+           
             }"
           >
           </v-line>
@@ -78,6 +76,7 @@
           </v-line>
          
        </v-layer>
+        <v-layer>
          <GraphLine 
           v-for="graph in list"
           :key="graph.id"
@@ -87,6 +86,7 @@
           :disVerLine="disVerLine"
           :onePixel="onePixel"
           ></GraphLine>
+           </v-layer>
       </v-stage>
     </div>
     <div class="statusInfo">
@@ -113,7 +113,7 @@ export default {
       maxRange:800,
       onePixel:1,
       list:[],
-      horisontalPoints:Number,
+      horisontalPoints:0,
       distanceVerticalLine:Number,
       disVerLine:0,
        configKonva: {
@@ -147,9 +147,33 @@ export default {
   },
   mounted(){
     this.list=this.graphics;
-    this.horisontalPoints=this.list[0].length;
+    //find max horisontal points and max value 
+    let maxValue=0;
+    for(let i in this.list){
+      if (this.list[i].length>this.horisontalPoints){
+          this.horisontalPoints = this.list[i].length;
+          let masMaxVal=Math.max(...this.list[i])
+          if (maxValue<masMaxVal)
+          maxValue=masMaxVal;
+      }
+    }
+
+
+    console.log(maxValue);
+    //raund graph
+    {
+    let count=0;
+    do {
+      count++;
+      maxValue = maxValue/10
+      console.log(count);
+    } while (maxValue > 10);
+    console.log(Math.trunc(maxValue)+1)
+    this.maxRange=(Math.trunc(maxValue)+1)*(Math.pow(10, count));
+    console.log(this.maxRange);
     this.disVerLine=this.width/(this.horisontalPoints-1);
     this.onePixel=this.height/this.maxRange;
+    }//
     
   }
 

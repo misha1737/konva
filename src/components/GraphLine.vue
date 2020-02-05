@@ -1,7 +1,9 @@
 <template>
   <div class="GraphLine" >
-      <v-layer
-       :config="{
+      
+       
+          <v-group 
+          :config="{
             x:40,
             y:10
           }">
@@ -14,14 +16,14 @@
             closed: true,
             stroke: 'black',
             draggable: false,
-            fill: '#33cc3388',
+            fill: color,
             strokeWidth: 1
             //opacity: 0.3
             }"
           >
           </v-line>
-      </v-layer>
-        <v-layer
+       </v-group> 
+      <v-group 
          :config="{
             x:40,
             y:10
@@ -58,8 +60,8 @@
             strokeWidth: 1
           }'
           ></v-circle>
-         
-        </v-layer>
+         </v-group> 
+       
 
 
     </div>
@@ -74,7 +76,8 @@ export default {
   data() {
     
     return {
-     points:[]
+     points:[],
+     color:'#33cc3388'
     };
   },
   props: {
@@ -94,7 +97,7 @@ export default {
           this.points.push(i*this.disVerLine);
           this.points.push(this.height-this.list[i]*this.onePixel);
         }
-        this.points.push(this.width);
+        this.points.push(this.points[this.points.length-2]);
         this.points.push(this.height);
         this.points.push(0);
         this.points.push(this.height);
@@ -104,13 +107,13 @@ export default {
         handleDragstart(){
          
       },
-      handleDragend(e){
-           this.list[e.target.index]=(this.height-e.target.attrs.y)/this.onePixel;
-          this.renderLine();
+      handleDragend(){
+          
          
       },
-      handleDragmove(){
-         
+      handleDragmove(e){
+          this.list[e.target.index]=(this.height-e.target.attrs.y)/this.onePixel;
+          this.renderLine();
           
       }
   },
